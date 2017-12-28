@@ -1,3 +1,9 @@
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+
+Minim minim;
+AudioPlayer song;
+
 ArrayList<Point> fog;
 
 //coordonées de la camera
@@ -7,11 +13,9 @@ float camZ;
 float fovY;
 float fovX;
 
-float vitesse = 1;
-
 void setup(){
   
-  size(800, 600, P3D);
+  size(1600, 850, P3D);
   
   //coordonées par défaut de la camera
   camX = width/2;
@@ -20,13 +24,13 @@ void setup(){
   fovY = PI/3;
   fovX = 2 * atan(width/2 / camZ);
   
-  
+  minim = new Minim(this);
+  song = minim.loadFile("kaaris_charge.mp3");
+  song.play();
   
   fog = new ArrayList();
   
-  
-  
-  for(int i = 0; i < 10000; i++){
+  for(int i = 0; i < 3000; i++){
     
     fog.add(new Point(random(camZ)));
   }
@@ -48,9 +52,9 @@ void draw(){
     stroke(p.couleur);
     point(p.x, p.y, p.z);
     
-    p.z += vitesse * noise(1, p.phase + millis() / 2000.0);    //On fait avancer le point dans la coordonnée Z (vers la camera)
-    p.x += noise(2, p.phase + millis() / 1000.0) - .5;
-    p.y += noise(3, p.phase + millis() / 1000.0) - .5;
+    p.z += song.mix.level() * 20;    //On fait avancer le point dans la coordonnée Z (vers la camera) en fonction du niveau sonore
+    p.x += .5 * (noise(2, p.phase + millis() / 1000.0) - .5);
+    p.y += .5 * (noise(3, p.phase + millis() / 1000.0) - .5);
     
     //Calcul des angles en X et Y entre la caméra et le points pour déterminer s'il est dans le champ de vision
     float angleX = atan((p.x-camX) / (p.z-camZ));
@@ -80,13 +84,7 @@ class Point{
     x = random(width);
     y = random(height);
     this.z = z;
-    couleur = color(255, random(50, 200), 0);    //couleur dans les tons chauds (orange-jaunatre)
+    couleur = color(255, random(50, 200), 0, 255);    //couleur dans les tons chauds (orange-jaunatre)
     phase = random(100);
   }
-}
-
-
-void mouseWheel(MouseEvent event) {
-  float e = event.getCount();
-  vitesse *= (1-e/5);
 }
