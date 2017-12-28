@@ -18,7 +18,7 @@ void setup(){
   camY = height/2;
   camZ = (height/2) / tan(PI/6);
   fovY = PI/3;
-  fovX = tan(fovY) * camZ;
+  fovX = 2 * atan(width/2 / camZ);
   
   
   
