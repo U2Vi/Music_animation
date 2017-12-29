@@ -4,7 +4,7 @@ import ddf.minim.analysis.*;
 Minim minim;
 AudioPlayer song;
 
-ArrayList<Point> fog;
+Point fog[] = new Point[3500];
 
 //coordonées de la camera
 float camX;
@@ -12,6 +12,7 @@ float camY;
 float camZ;
 float fovY;
 float fovX;
+
 
 void setup(){
   
@@ -28,11 +29,10 @@ void setup(){
   song = minim.loadFile("kaaris_charge.mp3");
   song.play();
   
-  fog = new ArrayList();
   
-  for(int i = 0; i < 3000; i++){
+  for(int i = 0; i < fog.length; i++){
     
-    fog.add(new Point(random(camZ)));
+    fog[i] = new Point(random(camZ));
   }
   
 }
@@ -41,9 +41,7 @@ void draw(){
   
   background(0);
   
-  for(int i = fog.size() - 1; i >= 0; i--){    //On parcoure l'ArrayList a l'envers pour pouvoir supprimer et creer de nouveaux objets sans crash
-    
-    Point p = fog.get(i);
+  for(Point p : fog){
     
     float d = dist(p.x, p.y, p.z, camX, camY, camZ);    //la distance du point a la camera
     
@@ -62,8 +60,7 @@ void draw(){
     
     if(abs(angleY) > fovY/2 || abs(angleX) > fovX/2 || p.z > camZ){    //Si un point est en dehors du champ de vision, alors il est supprimé et un autre point est crée
       
-      fog.remove(i);
-      fog.add(new Point(0));
+      p.reset();
     }
   }
   
@@ -86,5 +83,12 @@ class Point{
     this.z = z;
     couleur = color(255, random(50, 200), 0, 255);    //couleur dans les tons chauds (orange-jaunatre)
     phase = random(100);
+  }
+  
+  void reset(){
+    
+    x = random(width);
+    y = random(height);
+    z = 0;
   }
 }
