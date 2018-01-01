@@ -84,8 +84,6 @@ void draw() {
       loadNextSong();    //...else load the next song
     }
   }
-
-  println(frameRate);    //Prints the frame rate, just too keep an eye on it
 }
 
 
@@ -116,6 +114,8 @@ void loadSong(int i) {
   author = meta.author();
   if (title.equals("")) title = split(fileNames[i], '.')[0].replaceAll("_", " ");
   if (author.equals("")) author = "Unknown artist";
+  
+  disapearTime = millis() + 2000;
 }
 
 
@@ -325,11 +325,11 @@ class Animation {
 
   Animation() {
 
-    nbPoints = 4000;    //The disk will be made out of 4000 points
+    nbPoints = 5000;    //The disk will be made out of 5000 points
     points = new PVector[nbPoints];
     colors = new color[nbPoints];
-    image = loadImage("Wooden_Tower.png");    //The image placed on the disk, if this creates an error, verify that you got an image of the same name and type in the sketch data
-    radiusCenter = 400;    //Sets the radius of the hole in the center to 400
+    image = loadImage("Wooden_Tower.png");    //The image placed on the disk, if this creates an error, verify that you got an image of the same name in the sketch data
+    radiusCenter = 500;    //Sets the radius of the hole in the center to 500
 
     setPointPositions();
     setPointColors();
@@ -396,7 +396,7 @@ class Animation {
 
     pushMatrix();
 
-    float zoom = (float)height / 150;    //The zoom varies with the height of the window
+    float zoom = (float)height / 200;    //The zoom varies with the height of the window
     float angleX = HALF_PI * (1 - noise(trackNb, song.position() / 7000.0));
     float angleZ = song.position() / 1000.0;    //The rotation of the disk, here one turn each ~6,3 seconds
 
@@ -408,11 +408,15 @@ class Animation {
     beginShape(POINTS);
 
     float amplitude = 50;
+    
+    float level = song.mix.level() * amplitude;
+    
+    float temps = (float)millis() * 0.001;
 
     for (int i = 0; i < nbPoints; i++) {
 
-      points[i].z = amplitude * noise((float)i/2000, millis() * 0.001) * song.mix.level();
-
+      points[i].z = noise((float)i/2000, temps) * level;
+      
       stroke(colors[i]);
       vertex(points[i].x, points[i].y, points[i].z);
     }
