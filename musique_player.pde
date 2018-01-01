@@ -99,7 +99,7 @@ void loadSong(int i) {
       song.pause();
       song = minim.loadFile("Music/" + fileNames[i]);
       song.play();
-    } else {    //...else load the next song
+    } else {    //...else just load the song and leave it paused.
 
       song = minim.loadFile("Music/" + fileNames[i]);
     }
