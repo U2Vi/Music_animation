@@ -1,10 +1,11 @@
 /*
 To use this code, you'll have to create a "Music" file in your sketch, and put at least one music in it.
-You'll have to put an image in the sketch, and put the name of the file in the "loadImage(...)" line 330.
+You'll have to put an image in the sketch, and put the name of the file in the "loadImage(...)" line 331.
 The image will be projected on a disk in the center of the window, with a little animation
 It can be used to simply play music, and get an animation reacting to it.
+You also need to download the minim library from processing by ""sketch">"import library">"add a library",
+then type "Minim" and click install.
 */
-
 
 //loads the minim library
 import ddf.minim.*;
