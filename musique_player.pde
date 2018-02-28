@@ -1,11 +1,11 @@
 /*
 To use this code, you'll have to create a "Music" file in your sketch, and put at least one music in it.
-You'll have to put an image in the sketch, and put the name of the file in the "loadImage(...)" line 331.
-The image will be projected on a disk in the center of the window, with a little animation
-It can be used to simply play music, and get an animation reacting to it.
-You also need to download the minim library from processing by ""sketch">"import library">"add a library",
-then type "Minim" and click install.
-*/
+ You'll have to put an image in the sketch, and put the name of the file in the "loadImage(...)" line 331.
+ The image will be projected on a disk in the center of the window, with a little animation
+ It can be used to simply play music, and get an animation reacting to it.
+ You also need to download the minim library from processing by "sketch" > "import library" > "add a library",
+ then type "Minim" and click install.
+ */
 
 //loads the minim library
 import ddf.minim.*;
@@ -114,7 +114,7 @@ void loadSong(int i) {
   author = meta.author();
   if (title.equals("")) title = split(fileNames[i], '.')[0].replaceAll("_", " ");
   if (author.equals("")) author = "Unknown artist";
-  
+
   disapearTime = millis() + 2000;
 }
 
@@ -160,7 +160,7 @@ void drawFFT() {
 
   fill(255, 255, 255, 100);
   stroke(255);
-  
+
   fft.forward(song.mix);    //Updates the FFT
 
   beginShape();
@@ -194,7 +194,7 @@ class button {
     this.image = image;
     this.yDelta = size.y + readerHeight;
   }
-  
+
   //Draws the button
   void draw() {
 
@@ -232,9 +232,9 @@ float opacity() {
 void mousePressed() {
 
   if (mouseButton == LEFT) {
-    
+
     if (canClick) {
-       
+
       if (playPause.isUnderCursor()) {    //If the user clicks on the play-pause button, it plays-pauses the music
 
         if (song.isPlaying()) {
@@ -283,10 +283,16 @@ void playSong() {
 //Loads the previous song
 void loadPreviousSong() {
 
-  if (trackNb > 0) {    //Does nothing if it's the first song
+  if (song.position() < 2000) {
+    
+    if (trackNb > 0) {    //Does nothing if it's the first song
 
-    trackNb--;
-    loadSong(trackNb);
+      trackNb--;
+      loadSong(trackNb);
+    }
+  } else {
+    
+    song.cue(0);
   }
 }
 
@@ -328,7 +334,7 @@ class Animation {
     nbPoints = 5000;    //The disk will be made out of 5000 points
     points = new PVector[nbPoints];
     colors = new color[nbPoints];
-    image = loadImage("Wooden_Tower.png");    //The image placed on the disk, if this creates an error, verify that you got an image of the same name in the sketch data
+    image = loadImage("diskImage.png");    //The image placed on the disk, if this creates an error, verify that you got an image of the same name in the sketch data
     radiusCenter = 500;    //Sets the radius of the hole in the center to 500
 
     setPointPositions();
@@ -408,15 +414,15 @@ class Animation {
     beginShape(POINTS);
 
     float amplitude = 50;
-    
+
     float level = song.mix.level() * amplitude;
-    
+
     float temps = (float)millis() * 0.001;
 
     for (int i = 0; i < nbPoints; i++) {
 
       points[i].z = noise((float)i/2000, temps) * level;
-      
+
       stroke(colors[i]);
       vertex(points[i].x, points[i].y, points[i].z);
     }
